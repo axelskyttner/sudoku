@@ -22,6 +22,59 @@ var globalPreNumbers = [
 			{row:1, column:5, value:1}
 		]
 
+function createGame(){
+	setCell(0,3, 2);
+	setCell(0,4,6);
+	setCell(0,6,7);
+	setCell(0,8,1);
+
+	setCell(1,0,6);
+	setCell(1,1,8);
+	setCell(1,4,7);
+	setCell(1,7,9);
+
+	setCell(2,0,1);
+	setCell(2,1,9);
+	setCell(2,5,4);
+	setCell(2,6,5);
+
+	setCell(3,0,8);
+	setCell(3,1,2);
+	setCell(3,3,1);
+	setCell(3,7,4);
+	
+	setCell(4,2,4);
+	setCell(4,3,6);
+	setCell(4,5,2);
+	setCell(4,6,9);
+
+	setCell(5,1,5);
+	setCell(5,5,3);
+	setCell(5,7,2);
+	setCell(5,8,8);
+
+	
+	setCell(6,2,9);
+	setCell(6,3,3);
+	setCell(6,7,7);
+	setCell(6,8,4);
+
+	setCell(7,1,4);
+	setCell(7,4,5);
+	setCell(7,7,3);
+	setCell(7,8,6);
+
+	
+
+	setCell(8,0,7);
+	setCell(8,2,3);
+	setCell(8,4,1);
+	setCell(8,5,8);
+	
+
+
+
+}
 //numbersToAdd: {row, column, value}
 function generateNumberArray(numbersToAdd){	
 	numbersToAdd = numbersToAdd || [];
@@ -124,6 +177,11 @@ function addNumberToPreNumber(clickString){
 
 	globalPreNumbers.push({row:row, column: column, value:parseInt(clickString)});
 }
+
+function setCell(row, column,value){
+
+										globalPreNumbers.push({row:row, column:column, value:value});
+										}
 
 
 function generatePositionBox(box, directionVector){
