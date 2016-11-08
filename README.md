@@ -1,2 +1,2 @@
 # sudoku
-Test with some functional javascript and first try with reactive
+A client sudoku where you can solve it yourself and submitt to restapi to solve the rest
