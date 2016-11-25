@@ -1,6 +1,7 @@
 <html>
 		<head>
 				<script src="rx.js"></script> 
+				<script src="rx-dom.js"></script> 
 				<title>Hello Sudoku</title>
 		</head>
 		<body>
@@ -18,10 +19,9 @@ var canvas = document.getElementById("mycanvas");
 
 var globalMarkerBox = {width:500/9, height:500/9, xpos:0, ypos:0};
 var globalPreNumbers = [
-			{row:1, column:0, value:1},
-			{row:1, column:5, value:1}
 		]
-
+//createGame();
+createGame2();
 function createGame(){
 	setCell(0,3, 2);
 	setCell(0,4,6);
@@ -75,9 +75,17 @@ function createGame(){
 
 
 }
+
+function createGame2(){
+
+	globalPreNumbers = [{"row":0,"column":0,"value":5},{"row":0,"column":2,"value":8},{"row":2,"column":2,"value":6},{"row":2,"column":1,"value":9},{"row":2,"column":5,"value":7},{"row":1,"column":3,"value":9},{"row":0,"column":4,"value":3},{"row":2,"column":8,"value":3},{"row":3,"column":8,"value":2},{"row":3,"column":6,"value":3},{"row":4,"column":8,"value":7},{"row":5,"column":7,"value":1},{"row":5,"column":6,"value":9},{"row":5,"column":4,"value":2},{"row":4,"column":4,"value":1},{"row":4,"column":5,"value":9},{"row":3,"column":4,"value":7},{"row":4,"column":3,"value":8},{"row":3,"column":2,"value":5},{"row":3,"column":1,"value":1},{"row":4,"column":0,"value":3},{"row":5,"column":0,"value":8},{"row":5,"column":2,"value":7},{"row":6,"column":0,"value":7},{"row":6,"column":3,"value":5},{"row":7,"column":5,"value":8},{"row":8,"column":4,"value":6},{"row":6,"column":6,"value":6},{"row":6,"column":7,"value":9},{"row":8,"column":6,"value":2},{"row":8,"column":8,"value":4}];
+	
+
+}
 //numbersToAdd: {row, column, value}
 function generateNumberArray(numbersToAdd){	
 	numbersToAdd = numbersToAdd || [];
+	console.log("numbersToAdd", numbersToAdd);
 	var numberArr = [];
 	for(var i = 0; i < 9; i++){
 
@@ -181,7 +189,7 @@ function addNumberToPreNumber(clickString){
 function setCell(row, column,value){
 
 										globalPreNumbers.push({row:row, column:column, value:value});
-										}
+		}
 
 
 function generatePositionBox(box, directionVector){
@@ -204,6 +212,31 @@ numberKeys.subscribe(addNumberToPreNumber);
 allKeys.subscribe(function(){
 	updateSudoku(canvas, globalPreNumbers, globalMarkerBox);		
 });
+
+function getAnswer(sudokuArr){
+	var arguments = "sudokuToSolve=" + JSON.stringify(sudokuArr);									
+	Rx.DOM.get('/solve' + "?" + arguments)
+    .subscribe(
+        function (xhr) {
+            var text = xhr.response;
+			globalPreNumbers = JSON.parse(text);
+
+
+			//removes all the undefined values
+			globalPreNumbers = globalPreNumbers.filter(function(cell){
+				return cell.value !== undefined;
+			});
+
+			updateSudoku(canvas, globalPreNumbers, globalMarkerBox);
+			console.log("testing");
+        },
+        function (err) {
+				console.log("err",err);
+            // Log the error
+        }
+    );
+
+}
 
 function drawSudoku(canvas, preNumbers){
 		var lineWidthBorder = 10;
@@ -318,8 +351,16 @@ function updateSudoku(canvas, preNumbers, marker){
 		drawSquare(canvas, globalMarkerBox, lineWidth);
 	
 }
-
+	
 	updateSudoku(canvas, globalPreNumbers, globalMarkerBox);
+	function showAnswer(){
+	
+				
+			getAnswer(globalPreNumbers.filter(function(cell){
+					return cell.value !== 0;}));
+	}
+
+
 		</script>
 </html>
 

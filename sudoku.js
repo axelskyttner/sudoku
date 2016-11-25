@@ -7,15 +7,6 @@ this.potential= [];
 }
 var numberList = [1,2,3,4,5,6,7,8,9];
 
-var cellList = [];
-for(var i = 1; i < 10; i++){
-	
-	for(var j = 1; j < 10 ; j++){
-		cell = new Cell(i,j);
-		cellList.push(cell);
-	}
-
-}
 function solveCell(cell, cellList){
 		cell.potential = [];
 		var sortedArrayRow = sortArray(getRow(cell, cellList));
@@ -30,7 +21,7 @@ function solveCell(cell, cellList){
 		});
 
 		var busyArray = getBusyNumbers(valueList);
-
+		
 		busyArray.forEach(function(valueInBusyList, index){
 			if(valueInBusyList === undefined){
 				cell.potential.push(index +1);
@@ -38,26 +29,97 @@ function solveCell(cell, cellList){
 
 		});
 
-
 };
 
+function solveBox(boxList, cellList){
+	
+	//for every number we check if we can find how many cells there exist for that value
+	var numbers = [1,2,3,4,5,6,7,8,9];	
+
+	var matchingNumbers = numbers.map(function(number){
+		
+		//get all the cells that the number can be in
+		var matchingArrays = boxList.filter(function(cell){
+			//first it has to be unassigned value and the 
+			return	cell.value === undefined && cell.potential.some(function(potentialValue){
+
+				return potentialValue === number;
+			});
+
+			
+		});
+		//if there is only one place the number can fit it's a match
+		if(matchingArrays.length === 1){
+			var cell = matchingArrays[0];
+			return {cell:cell, value:number}; 
+		}
+		else {
+			return false;
+		}
+	}).filter(function(maybeCell){return maybeCell !== false});
+
+	//matchingNumbers look like following {cell: cell, value:number}. It will only be one value and that's the only value the cell can take
+	matchingNumbers.forEach(function(cellObject){
+		var cell =	cellObject.cell;
+		var value = cellObject.value;
+
+		//global cell
+		var globalCell = getCell(cell.x, cell.y, cellList);
+		globalCell.potential = [value];
+	});
+
+}
+
+
+
 function solveGame(cellList){
-	cellList.forEach(function(cell){
+	//this command will find every value that has to be because no other values fit	
+		cellList.forEach(function(cell){
 		solveCell(cell, cellList);
 			});
 
+	//we can also use the fact that given that we have to put in a number, where in the row can that number be. 			
+	//debug, getting the top right box to find number 9
+	var topRightBox = getSquare(new Cell(1,7), cellList);
+	var boxList = cellList.filter(function(cell){
+			return ( cell.x === 1 && cell.y === 1 ) ||
+					(cell.x === 4 && cell.y ===1 ) ||
+					(cell.x === 7 && cell.y ===1 ) ||
+					(cell.x === 1 && cell.y ===4 ) ||
+					(cell.x === 4 && cell.y ===4 ) ||
+					(cell.x === 7 && cell.y ===4 ) ||
+					(cell.x === 1 && cell.y ===7 ) ||
+					(cell.x === 4 && cell.y ===7 ) ||
+					(cell.x === 7 && cell.y ===7 );
+					
+	}).map(function(cell){
+		return getSquare(cell, cellList);
+	});
+
+
+	console.log("uniqueBoxList", boxList.length);
+
+	boxList.forEach(function(box){
+		solveBox(box,cellList);
+
+	});
+	
 	var filteredList = cellList.filter(function(cell){
 		return cell.potential.length === 1 && cell.value === undefined;
-});
+	});
+	
 	filteredList.forEach(function(cell){
 		cell.value = cell.potential.pop();
 	});
-
+	
+	//check if there is any cells left unsolved
 	var unsolvedFlag = cellList.some(function(cell){
 		return cell.value === undefined;
 	});
-
-	if(unsolvedFlag){
+	
+	//added false while debug
+	if(unsolvedFlag ){
+		 
 		return 	solveGame(cellList);
 	}
 
@@ -68,7 +130,6 @@ function solveGame(cellList){
 	//	return getNumberOfFreeElements(array) < 3;
 	//});
 
-//	console.log("numberOfFreeElementsList", numberOfFreeElementsList);
 
 };
 
@@ -91,71 +152,102 @@ function setCellToMissingValue(celllist){
 	
 }
 
+function solveGameFromClient(sudokuFromClient){
+
+	var cellList = [];
+	for(var i = 1; i < 10; i++){
+		
+		for(var j = 1; j < 10 ; j++){
+			cell = new Cell(i,j);
+			cellList.push(cell);
+		}
+	
+	}
+	//a cell looks like following {row, column, value}
+	sudokuFromClient.forEach(function(cell){
+		setCell(cell.row + 1, cell.column +1, cell.value, cellList);
+	});
+
+
+	var solvedGame = solveGame(cellList);
+	
+	var correctedGame = solvedGame.map(function( cell ){return {row:cell.x - 1, column : cell.y - 1, value: cell.value}});
+	return correctedGame;
+}
+
 function createGame(){
-	setCell(1,4, 2);
-	setCell(1,5,6);
-	setCell(1,7,7);
-	setCell(1,9,1);
-	//setCell(1,2,3);
 
-	setCell(2,1,6);
-	setCell(2,2,8);
-	//setCell(2,3,2);
-	setCell(2,5,7);
-	setCell(2,8,9);
-
-	setCell(3,1,1);
-	setCell(3,2,9);
-	setCell(3,6,4);
-	setCell(3,7,5);
-
-	setCell(4,1,8);
-	setCell(4,2,2);
-	setCell(4,4,1);
-	setCell(4,8,4);
+	var cellList = [];
+	for(var i = 1; i < 10; i++){
+		
+		for(var j = 1; j < 10 ; j++){
+			cell = new Cell(i,j);
+			cellList.push(cell);
+		}
 	
-	setCell(5,3,4);
-	setCell(5,4,6);
-	setCell(5,6,2);
-	setCell(5,7,9);
+	}
+	setCell(1,4,2,cellList);
+	setCell(1,5,6,cellList);
+	setCell(1,7,7,cellList);
+	setCell(1,9,1,cellList);
+	//setCell(1,2,cellList)3);
 
-	setCell(6,2,5);
-	setCell(6,6,3);
-	setCell(6,8,2);
-	setCell(6,9,8);
+	setCell(2,1,6,cellList);
+	setCell(2,2,8,cellList);
+	//setCell(2,3,cellList)2);
+	setCell(2,5,7,cellList);
+	setCell(2,8,9,cellList);
+
+	setCell(3,1,1,cellList);
+	setCell(3,2,9,cellList);
+	setCell(3,6,4,cellList);
+	setCell(3,7,5,cellList);
+
+	setCell(4,1,8,cellList);
+	setCell(4,2,2,cellList);
+	setCell(4,4,1,cellList);
+	setCell(4,8,4,cellList);
+	
+	setCell(5,3,4,cellList);
+	setCell(5,4,6,cellList);
+	setCell(5,6,2,cellList);
+	setCell(5,7,9,cellList);
+
+	setCell(6,2,5,cellList);
+	setCell(6,6,3,cellList);
+	setCell(6,8,2,cellList);
+	setCell(6,9,8,cellList);
 
 	
-	setCell(7,3,9);
-	setCell(7,4,3);
-	setCell(7,8,7);
-	setCell(7,9,4);
+	setCell(7,3,9,cellList);
+	setCell(7,4,3,cellList);
+	setCell(7,8,7,cellList);
+	setCell(7,9,4,cellList);
 
-	setCell(8,2,4);
-	setCell(8,5,5);
-	setCell(8,8,3);
-	setCell(8,9,6);
-
+	setCell(8,2,4,cellList);
+	setCell(8,5,5,cellList);
+	setCell(8,8,3,cellList);
+	setCell(8,9,6,cellList);
+	
+	setCell(9,1,7,cellList);
+	setCell(9,3,3,cellList);
+	setCell(9,5,1,cellList);
+	setCell(9,6,8,cellList);
 	
 
-	setCell(9,1,7);
-	setCell(9,3,3);
-	setCell(9,5,1);
-	setCell(9,6,8);
-	
-
-
+	return cellList;
 
 }
 
-function setCell(x,y, value){
-	var cell = getCell(x,y);
+function setCell(x,y, value, cellList){
+	var cell = getCell(x,y, cellList);
 	cell.value = value;
 
 
 }
 
 
-function getCell(x, y){
+function getCell(x, y, cellList){
 	var filteredArray = cellList.filter(function(cell){
 		return cell.x === x && cell.y === y;
 	});
@@ -279,10 +371,13 @@ function getBusyNumbers(arrayWithArrays){
 	}
 }
 
-createGame();
-console.log("game", cellList);
+module.exports = {
 
-solveGame(cellList);
+	solveGame: solveGameFromClient
+}
 
-console.log("game after solve", cellList);
+//var cellList = createGame();
+//
+//solveGame(cellList);
+//
 
