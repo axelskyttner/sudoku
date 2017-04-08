@@ -1,5 +1,5 @@
 
-//global consctor
+//global consctor. Fix: is this really used?
 Cell = function(x,y){
 		this.x = x;
 		this.y = y;
@@ -39,6 +39,7 @@ function solveCell(cell, cellList){
 
 };
 
+//find solution for sudokubox
 function solveBox(boxList, cellList){
 
 		//for every number we check if we can find how many cells there exist for that value
@@ -78,6 +79,7 @@ function solveBox(boxList, cellList){
 
 }
 
+//solve one more step
 function solveStep(cellList){
 
 		//this command will find every value that has to be because no other values fit	
@@ -193,7 +195,7 @@ function solveGame(cellList){
 };
 
 
-
+//this is the function that get's exported
 function solveGameFromClient(sudokuFromClient){
 
 		var cellList = [];
@@ -222,7 +224,7 @@ function solveGameFromClient(sudokuFromClient){
 		return correctedGame;
 }
 
-
+//set cell to the value
 function setCell(x,y, value, cellList){
 		var cell = getCell(x,y, cellList);
 		cell.value = value;
@@ -347,8 +349,4 @@ module.exports = {
 		solveGame: solveGameFromClient
 }
 
-//var cellList = createGame();
-//
-//solveGame(cellList);
-//
 

@@ -7,6 +7,12 @@ app.get("/",function(req,res){
 
 });
 
+app.get("/clientDrawFunctions.js", function(req,res){
+
+	res.sendFile(__dirname + "/clientDrawFunctions.js");
+
+});
+
 app.get("/solve", function(req,res){
 
 		var sudokuToSolve = JSON.parse(req.query.sudokuToSolve);
