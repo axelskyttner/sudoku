@@ -1,3 +1,5 @@
+
+//global consctor
 Cell = function(x,y){
 		this.x = x;
 		this.y = y;
@@ -5,11 +7,16 @@ Cell = function(x,y){
 		this.potential= [];
 
 }
+
+//numberlist to use for dev
 var numberList = [1,2,3,4,5,6,7,8,9];
 
+//solve one cell
 function solveCell(cell, cellList){
 		cell.potential = [];
+
 		var sortedArrayRow = sortArray(getRow(cell, cellList));
+
 		var sortedArrayColumn = sortArray(getColumn(cell, cellList));
 
 		var sortedArrayBox = sortArray(getSquare(cell, cellList));
@@ -23,6 +30,7 @@ function solveCell(cell, cellList){
 		var busyArray = getBusyNumbers(valueList);
 
 		busyArray.forEach(function(valueInBusyList, index){
+
 				if(valueInBusyList === undefined){
 						cell.potential.push(index +1);
 				};
@@ -78,8 +86,8 @@ function solveStep(cellList){
 		});
 
 		//we can also use the fact that given that we have to put in a number, where in the row can that number be. 			
-		//debug, getting the top right box to find number 9
-		var topRightBox = getSquare(new Cell(1,7), cellList);
+
+		//this is the first cell in every box
 		var boxList = cellList.filter(function(cell){
 				return ( cell.x === 1 && cell.y === 1 ) ||
 						(cell.x === 4 && cell.y ===1 ) ||
@@ -92,32 +100,43 @@ function solveStep(cellList){
 						(cell.x === 7 && cell.y ===7 );
 
 		}).map(function(cell){
+
 				return getSquare(cell, cellList);
+
 		});
 
 
-		console.log("uniqueBoxList", boxList.length);
-
+		//go through all the cells and solve for every box
 		boxList.forEach(function(box){
+
 				solveBox(box,cellList);
 
 		});
-
+	
+		//check what cells that we can solve
 		var filteredList = cellList.filter(function(cell){
+
 				return cell.potential.length === 1 && cell.value === undefined;
 		});
 
+		//set every solvable cell to the solution
 		filteredList.forEach(function(cell){
-				cell.value = cell.potential.pop();
-		});
 
+				cell.value = cell.potential.pop();
+
+		});
+	
+		//return the cellList
 		return cellList;
+
 };
 
 
 
+//this solves the game
 function solveGame(cellList){
-		
+
+		//solve one more time
 		cellList = solveStep(cellList);
 
 		//check if it's solvable by solving one more time and check if it's less undefined values
@@ -125,39 +144,41 @@ function solveGame(cellList){
 
 		//counting the number of empty cells
 		var numberOfEmptyCells = cellList.reduce(function(acc,cell){
-			if(cell.value === undefined){
+				if(cell.value === undefined){
 
-				return acc + 1;
-			}
+						return acc + 1;
+				}
 
-			else{
+				else{
 
-				return acc;
-			}
+						return acc;
+				}
 		}, 0);
 
 
 		//counting the number of empty cells
 		var numberOfEmptyCellsNext = nextCellList.reduce(function(acc,cell){
-			if(cell.value === undefined){
+				if(cell.value === undefined){
 
-				return acc + 1;
-			}
+						return acc + 1;
+				}
 
-			else{
+				else{
 
-				return acc;
-			}
+						return acc;
+				}
 		}, 0);
 
 		//check if there is any cells left unsolved
 		var unsolvedFlag = numberOfEmptyCells > 0;
 
+		//check if it's solvable
 		var solvable = numberOfEmptyCellsNext < numberOfEmptyCells;
-		
+
 		if( !solvable ) {
 
-			return cellList;
+				return cellList;
+
 		}
 		else if(unsolvedFlag ){
 
@@ -167,35 +188,17 @@ function solveGame(cellList){
 		else{
 				return cellList;
 		}
-		//var numberOfFreeElementsList = solvedList.filter(function(array){
-		//	return getNumberOfFreeElements(array) < 3;
-		//});
 
 
 };
 
-function getNumberOfFreeElements(array){
-		var filteredArray = array.filter(function(cell){
 
-				return cell.value === undefined;
-
-		});
-		return filteredArray.length;
-
-
-}
-
-function setCellToMissingValue(celllist){
-		cellList.forEach(function(cell, index){
-
-
-		});
-
-}
 
 function solveGameFromClient(sudokuFromClient){
 
 		var cellList = [];
+
+		//creating the cellList
 		for(var i = 1; i < 10; i++){
 
 				for(var j = 1; j < 10 ; j++){
@@ -204,9 +207,12 @@ function solveGameFromClient(sudokuFromClient){
 				}
 
 		}
+
 		//a cell looks like following {row, column, value}
 		sudokuFromClient.forEach(function(cell){
-				setCell(cell.row + 1, cell.column +1, cell.value, cellList);
+
+			setCell(cell.row + 1, cell.column +1, cell.value, cellList);
+
 		});
 
 
@@ -216,69 +222,6 @@ function solveGameFromClient(sudokuFromClient){
 		return correctedGame;
 }
 
-function createGame(){
-
-		var cellList = [];
-		for(var i = 1; i < 10; i++){
-
-				for(var j = 1; j < 10 ; j++){
-						cell = new Cell(i,j);
-						cellList.push(cell);
-				}
-
-		}
-		setCell(1,4,2,cellList);
-		setCell(1,5,6,cellList);
-		setCell(1,7,7,cellList);
-		setCell(1,9,1,cellList);
-		//setCell(1,2,cellList)3);
-
-		setCell(2,1,6,cellList);
-		setCell(2,2,8,cellList);
-		//setCell(2,3,cellList)2);
-		setCell(2,5,7,cellList);
-		setCell(2,8,9,cellList);
-
-		setCell(3,1,1,cellList);
-		setCell(3,2,9,cellList);
-		setCell(3,6,4,cellList);
-		setCell(3,7,5,cellList);
-
-		setCell(4,1,8,cellList);
-		setCell(4,2,2,cellList);
-		setCell(4,4,1,cellList);
-		setCell(4,8,4,cellList);
-
-		setCell(5,3,4,cellList);
-		setCell(5,4,6,cellList);
-		setCell(5,6,2,cellList);
-		setCell(5,7,9,cellList);
-
-		setCell(6,2,5,cellList);
-		setCell(6,6,3,cellList);
-		setCell(6,8,2,cellList);
-		setCell(6,9,8,cellList);
-
-
-		setCell(7,3,9,cellList);
-		setCell(7,4,3,cellList);
-		setCell(7,8,7,cellList);
-		setCell(7,9,4,cellList);
-
-		setCell(8,2,4,cellList);
-		setCell(8,5,5,cellList);
-		setCell(8,8,3,cellList);
-		setCell(8,9,6,cellList);
-
-		setCell(9,1,7,cellList);
-		setCell(9,3,3,cellList);
-		setCell(9,5,1,cellList);
-		setCell(9,6,8,cellList);
-
-
-		return cellList;
-
-}
 
 function setCell(x,y, value, cellList){
 		var cell = getCell(x,y, cellList);
@@ -287,7 +230,7 @@ function setCell(x,y, value, cellList){
 
 }
 
-
+//fix: change to find?
 function getCell(x, y, cellList){
 		var filteredArray = cellList.filter(function(cell){
 				return cell.x === x && cell.y === y;
@@ -295,6 +238,7 @@ function getCell(x, y, cellList){
 		return filteredArray[0];
 }
 
+// returns array with row
 function getRow(cell, cellList){
 		var rowArray = cellList.filter(function(cellInCellList){
 				return cell.x === cellInCellList.x;
@@ -302,6 +246,7 @@ function getRow(cell, cellList){
 		return rowArray;
 }
 
+// returns array with column
 function getColumn(cell, cellList){
 
 		var columnArray = cellList.filter(function(cellInCellList){
@@ -310,6 +255,7 @@ function getColumn(cell, cellList){
 		return columnArray;
 }
 
+//returns array with the column
 function getSquare(cell, cellList){
 
 		var columnArray = cellList.filter(function(cellInCellList){
@@ -322,25 +268,6 @@ function getSquare(cell, cellList){
 function sortArray(array){
 		//var sortedArray = [];
 		var sortedArray2 = array.slice();
-		//for(var i = 0; i < 10; i++){
-		//	sortedArray.push(undefined);
-		//}
-
-		//	var filteredArray = array.filter(function(cell){
-		//		return cell.value !== undefined;
-		//	});
-
-
-		//	array.forEach(function(cell,index, array){
-		//
-		//		if(cell.value !== undefined){
-		//
-		//			var savedCell = sortedArray2[cell.value -1];
-		//			sortedArray2[cell.value -1] = cell;
-		//			sortedArray2[index] = savedCell;
-		//		}
-		//
-		//	});
 
 		var sortedArray3 = array.map(function(cell, index ){
 				var valueToBeInsertedIndex = sortedArray2.findIndex(function(cell){
@@ -362,6 +289,7 @@ function sortArray(array){
 
 
 		});
+
 		sortedArray2.sort(function(cell1, cell2){
 				if(cell1.value === undefined){
 						return true;
@@ -374,6 +302,8 @@ function sortArray(array){
 						return cell1.value > cell2.value;
 				}
 		});
+
+
 		return sortedArray3;
 
 }
