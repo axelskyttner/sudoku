@@ -5,108 +5,141 @@
 				<title>Hello Sudoku</title>
 		</head>
 		<body>
+
 				<canvas id="mycanvas" width="600px" height="600px">
 
 				</canvas>	
+
+				<button onclick="showAnswer()">Show more numbers</button>
+				<button onclick="emptyGame()">Clear sudoku</button>
+				<button onclick="createGame()">Sudoku game 1</button>
+				<button onclick="createGame2()">Sudoku game 2</button>
+				<button onclick="createGame3()">Sudoku game 3</button>
 		</body>
 		<script>
 
 /*
 *todo: fix so correct number on correct place 
-*
-*/
-var canvas = document.getElementById("mycanvas");
+ *
+ */
+		var canvas = document.getElementById("mycanvas");
 
-var globalMarkerBox = {width:500/9, height:500/9, xpos:0, ypos:0};
+		var globalMarkerBox = {width:500/9, height:500/9, xpos:0, ypos:0};
 var globalPreNumbers = [
-		]
+]
 //createGame();
-createGame2();
+//createGame3();
 function createGame(){
-	setCell(0,3, 2);
-	setCell(0,4,6);
-	setCell(0,6,7);
-	setCell(0,8,1);
 
-	setCell(1,0,6);
-	setCell(1,1,8);
-	setCell(1,4,7);
-	setCell(1,7,9);
 
-	setCell(2,0,1);
-	setCell(2,1,9);
-	setCell(2,5,4);
-	setCell(2,6,5);
+		setCell(0,3, 2);
+		setCell(0,4,6);
+		setCell(0,6,7);
+		setCell(0,8,1);
 
-	setCell(3,0,8);
-	setCell(3,1,2);
-	setCell(3,3,1);
-	setCell(3,7,4);
-	
-	setCell(4,2,4);
-	setCell(4,3,6);
-	setCell(4,5,2);
-	setCell(4,6,9);
+		setCell(1,0,6);
+		setCell(1,1,8);
+		setCell(1,4,7);
+		setCell(1,7,9);
 
-	setCell(5,1,5);
-	setCell(5,5,3);
-	setCell(5,7,2);
-	setCell(5,8,8);
+		setCell(2,0,1);
+		setCell(2,1,9);
+		setCell(2,5,4);
+		setCell(2,6,5);
 
-	
-	setCell(6,2,9);
-	setCell(6,3,3);
-	setCell(6,7,7);
-	setCell(6,8,4);
+		setCell(3,0,8);
+		setCell(3,1,2);
+		setCell(3,3,1);
+		setCell(3,7,4);
 
-	setCell(7,1,4);
-	setCell(7,4,5);
-	setCell(7,7,3);
-	setCell(7,8,6);
+		setCell(4,2,4);
+		setCell(4,3,6);
+		setCell(4,5,2);
+		setCell(4,6,9);
 
-	
+		setCell(5,1,5);
+		setCell(5,5,3);
+		setCell(5,7,2);
+		setCell(5,8,8);
 
-	setCell(8,0,7);
-	setCell(8,2,3);
-	setCell(8,4,1);
-	setCell(8,5,8);
-	
+
+		setCell(6,2,9);
+		setCell(6,3,3);
+		setCell(6,7,7);
+		setCell(6,8,4);
+
+		setCell(7,1,4);
+		setCell(7,4,5);
+		setCell(7,7,3);
+		setCell(7,8,6);
+
+
+
+		setCell(8,0,7);
+		setCell(8,2,3);
+		setCell(8,4,1);
+		setCell(8,5,8);
+		
+		updateSudoku(canvas, globalPreNumbers, globalMarkerBox);
 
 
 
 }
 
 function createGame2(){
+		emptyGame();
+		globalPreNumbers = [{"row":0,"column":0,"value":5},{"row":0,"column":2,"value":8},{"row":2,"column":2,"value":6},{"row":2,"column":1,"value":9},{"row":2,"column":5,"value":7},{"row":1,"column":3,"value":9},{"row":0,"column":4,"value":3},{"row":2,"column":8,"value":3},{"row":3,"column":8,"value":2},{"row":3,"column":6,"value":3},{"row":4,"column":8,"value":7},{"row":5,"column":7,"value":1},{"row":5,"column":6,"value":9},{"row":5,"column":4,"value":2},{"row":4,"column":4,"value":1},{"row":4,"column":5,"value":9},{"row":3,"column":4,"value":7},{"row":4,"column":3,"value":8},{"row":3,"column":2,"value":5},{"row":3,"column":1,"value":1},{"row":4,"column":0,"value":3},{"row":5,"column":0,"value":8},{"row":5,"column":2,"value":7},{"row":6,"column":0,"value":7},{"row":6,"column":3,"value":5},{"row":7,"column":5,"value":8},{"row":8,"column":4,"value":6},{"row":6,"column":6,"value":6},{"row":6,"column":7,"value":9},{"row":8,"column":6,"value":2},{"row":8,"column":8,"value":4}];
 
-	globalPreNumbers = [{"row":0,"column":0,"value":5},{"row":0,"column":2,"value":8},{"row":2,"column":2,"value":6},{"row":2,"column":1,"value":9},{"row":2,"column":5,"value":7},{"row":1,"column":3,"value":9},{"row":0,"column":4,"value":3},{"row":2,"column":8,"value":3},{"row":3,"column":8,"value":2},{"row":3,"column":6,"value":3},{"row":4,"column":8,"value":7},{"row":5,"column":7,"value":1},{"row":5,"column":6,"value":9},{"row":5,"column":4,"value":2},{"row":4,"column":4,"value":1},{"row":4,"column":5,"value":9},{"row":3,"column":4,"value":7},{"row":4,"column":3,"value":8},{"row":3,"column":2,"value":5},{"row":3,"column":1,"value":1},{"row":4,"column":0,"value":3},{"row":5,"column":0,"value":8},{"row":5,"column":2,"value":7},{"row":6,"column":0,"value":7},{"row":6,"column":3,"value":5},{"row":7,"column":5,"value":8},{"row":8,"column":4,"value":6},{"row":6,"column":6,"value":6},{"row":6,"column":7,"value":9},{"row":8,"column":6,"value":2},{"row":8,"column":8,"value":4}];
-	
+
+		updateSudoku(canvas, globalPreNumbers, globalMarkerBox);
+}
+
+
+function emptyGame(){
+
+	globalPreNumbers.forEach(function(cell){
+
+		cell.value = 0;
+
+	});
+
+	updateSudoku(canvas, globalPreNumbers, globalMarkerBox);
 
 }
+
+
+function createGame3(){
+		emptyGame();
+		globalPreNumbers = [{"row":0,"column":0,"value":5},{"row":0,"column":1,"value":6},{"row":0,"column":4,"value":2},{"row":0,"column":7,"value":1},{"row":1,"column":0,"value":9},{"row":1,"column":4,"value":5},{"row":1,"column":8,"value":7},{"row":2,"column":1,"value":3},{"row":2,"column":5,"value":1},{"row":2,"column":7,"value":8},{"row":2,"column":8,"value":9},{"row":3,"column":2,"value":1},{"row":3,"column":3,"value":2},{"row":3,"column":5,"value":9},{"row":3,"column":8,"value":8},{"row":5,"column":1,"value":2},{"row":5,"column":4,"value":4},{"row":6,"column":2,"value":9},{"row":6,"column":5,"value":7},{"row":7,"column":0,"value":1},{"row":7,"column":4,"value":3},{"row":7,"column":7,"value":2},{"row":8,"column":0,"value":6},{"row":8,"column":2,"value":3},{"row":8,"column":6,"value":7},{"row":8,"column":7,"value":5},{"row":1,"column":1,"value":0},{"row":2,"column":2,"value":0},{"row":0,"column":3,"value":0},{"row":2,"column":6,"value":0},{"row":1,"column":7,"value":0},{"row":1,"column":6,"value":0},{"row":4,"column":8,"value":0},{"row":5,"column":8,"value":0},{"row":5,"column":7,"value":0},{"row":4,"column":1,"value":0},{"row":6,"column":0,"value":0},{"row":8,"column":4,"value":0},{"row":8,"column":5,"value":0},{"row":7,"column":6,"value":0},{"row":6,"column":6,"value":0}];
+		
+	updateSudoku(canvas, globalPreNumbers, globalMarkerBox);
+}
+
+
 //numbersToAdd: {row, column, value}
 function generateNumberArray(numbersToAdd){	
-	numbersToAdd = numbersToAdd || [];
-	console.log("numbersToAdd", numbersToAdd);
-	var numberArr = [];
-	for(var i = 0; i < 9; i++){
+		numbersToAdd = numbersToAdd || [];
+		var numberArr = [];
+		for(var i = 0; i < 9; i++){
 
-		for(var j = 0; j < 9; j++){
+				for(var j = 0; j < 9; j++){
 
-			//we have to check if we want to add the number
-			var maybeNumber = numbersToAdd.find(function(cellObj){
-				return cellObj.row === i && cellObj.column === j;
+						//we have to check if we want to add the number
+						var maybeNumber = numbersToAdd.find(function(cellObj){
+								return cellObj.row === i && cellObj.column === j;
 
-			});
+						});
 
-			//if we found a value add it
-			var value = (maybeNumber === undefined)? 0 : maybeNumber.value;
-			
+						//if we found a value add it
+						var value = (maybeNumber === undefined)? 0 : maybeNumber.value;
 
-			var cell = {row:i, column:j, value:value};	
-			numberArr.push(cell);						
 
+						var cell = {row:i, column:j, value:value};	
+						numberArr.push(cell);						
+
+				}
 		}
-	}
-	return numberArr;
+		return numberArr;
 }
 
 
@@ -125,14 +158,14 @@ function checkYDir(keyObject){
 }
 
 function checkNumberKey(keyObject){
-	var allowedKeys = ["1", "2", "3","4","5", "6", "7", "8", "9", "0"];
-	return checkOkayKey(keyObject, allowedKeys);
+		var allowedKeys = ["1", "2", "3","4","5", "6", "7", "8", "9", "0"];
+		return checkOkayKey(keyObject, allowedKeys);
 
 }
 
 function checkEnterKey(keyObject){
-	var allowedKeys = ["Enter"];
-	return checkOkayKey(keyObject, allowedKeys);
+		var allowedKeys = ["Enter"];
+		return checkOkayKey(keyObject, allowedKeys);
 
 }
 
@@ -145,56 +178,56 @@ function checkXDir(keyObject){
 }
 
 function updateGlobalBox(clickString){
-	switch(clickString){
-		case "ArrowUp":
-			globalMarkerBox = generatePositionBox(globalMarkerBox, {x:0, y:-1});
-			break;
+		switch(clickString){
+				case "ArrowUp":
+						globalMarkerBox = generatePositionBox(globalMarkerBox, {x:0, y:-1});
+						break;
 
-		case "ArrowDown":
-			globalMarkerBox = generatePositionBox(globalMarkerBox, {x:0, y:1});
-			break;
+				case "ArrowDown":
+						globalMarkerBox = generatePositionBox(globalMarkerBox, {x:0, y:1});
+						break;
 
-		case "ArrowRight":
-			globalMarkerBox = generatePositionBox(globalMarkerBox, {x:1, y:0});
-			break;
+				case "ArrowRight":
+						globalMarkerBox = generatePositionBox(globalMarkerBox, {x:1, y:0});
+						break;
 
-		case "ArrowLeft":
-			globalMarkerBox = generatePositionBox(globalMarkerBox, {x:-1, y:0});
-			break;
+				case "ArrowLeft":
+						globalMarkerBox = generatePositionBox(globalMarkerBox, {x:-1, y:0});
+						break;
 
-		default:
-				console.log("error input given");
-				break;
+				default:
+						console.log("error input given");
+						break;
 
-	}
+		}
 
 }
 
 
 
 function addNumberToPreNumber(clickString){
-	var row = Math.round(globalMarkerBox.ypos / globalMarkerBox.height);
-	var column = Math.round(globalMarkerBox.xpos / globalMarkerBox.width);
+		var row = Math.round(globalMarkerBox.ypos / globalMarkerBox.height);
+		var column = Math.round(globalMarkerBox.xpos / globalMarkerBox.width);
 
-	//remove existing values
-	globalPreNumbers = globalPreNumbers.filter(function(cell){
-		return !(cell.row === row && cell.column === column);
-	});
+		//remove existing values
+		globalPreNumbers = globalPreNumbers.filter(function(cell){
+				return !(cell.row === row && cell.column === column);
+		});
 
 
 
-	globalPreNumbers.push({row:row, column: column, value:parseInt(clickString)});
+		globalPreNumbers.push({row:row, column: column, value:parseInt(clickString)});
 }
 
 function setCell(row, column,value){
 
-										globalPreNumbers.push({row:row, column:column, value:value});
-		}
+		globalPreNumbers.push({row:row, column:column, value:value});
+}
 
 
 function generatePositionBox(box, directionVector){
 
-	return {width:box.width, height:box.height,xpos:  box.xpos + box.width * directionVector.x,ypos: box.ypos + box.height * directionVector.y} 
+		return {width:box.width, height:box.height,xpos:  box.xpos + box.width * directionVector.x,ypos: box.ypos + box.height * directionVector.y} 
 
 }
 
@@ -210,31 +243,31 @@ xkeyUps.subscribe(updateGlobalBox);
 numberKeys.subscribe(addNumberToPreNumber);
 
 allKeys.subscribe(function(){
-	updateSudoku(canvas, globalPreNumbers, globalMarkerBox);		
+		updateSudoku(canvas, globalPreNumbers, globalMarkerBox);		
 });
 
 function getAnswer(sudokuArr){
-	var arguments = "sudokuToSolve=" + JSON.stringify(sudokuArr);									
-	Rx.DOM.get('/solve' + "?" + arguments)
-    .subscribe(
-        function (xhr) {
-            var text = xhr.response;
-			globalPreNumbers = JSON.parse(text);
+		var arguments = "sudokuToSolve=" + JSON.stringify(sudokuArr);									
+		Rx.DOM.get('/solve' + "?" + arguments)
+				.subscribe(
+								function (xhr) {
+										var text = xhr.response;
+										globalPreNumbers = JSON.parse(text);
 
 
-			//removes all the undefined values
-			globalPreNumbers = globalPreNumbers.filter(function(cell){
-				return cell.value !== undefined;
-			});
+										//removes all the undefined values
+										globalPreNumbers = globalPreNumbers.filter(function(cell){
+												return cell.value !== undefined;
+										});
 
-			updateSudoku(canvas, globalPreNumbers, globalMarkerBox);
-			console.log("testing");
-        },
-        function (err) {
-				console.log("err",err);
-            // Log the error
-        }
-    );
+										updateSudoku(canvas, globalPreNumbers, globalMarkerBox);
+										console.log("testing");
+								},
+								function (err) {
+										console.log("err",err);
+										// Log the error
+								}
+						  );
 
 }
 
@@ -250,7 +283,7 @@ function drawSudoku(canvas, preNumbers){
 
 
 		//border
-	drawSquare(canvas, border, lineWidthBorder);
+		drawSquare(canvas, border, lineWidthBorder);
 
 		//big boxes
 		var bigBoxes = generateInnerSquares(border);
@@ -266,28 +299,28 @@ function drawSudoku(canvas, preNumbers){
 		//generate small boxes
 		textBoxes.forEach(function(smallBox){
 				drawSquare(canvas, smallBox, lineWidthSmallBox);
-				
+
 		});
 
 
 		//drawText, preNumbers is the numbers given on startup
 		var values = generateNumberArray(preNumbers);
-		
+
 		//remove non set values
 		var filteredValues = values.filter(function(valueCell){
-			return valueCell.value !== 0;
+				return valueCell.value !== 0;
 
 		});
 
 		//draw every value
 		filteredValues.forEach(function(valueCell){
 
-			var correspondingBox = textBoxes.find(function(box){
-					
-				return box.xpos === box.width * valueCell.column && box.ypos === box.height * valueCell.row;
-			
-			});
-			drawTextInBox(canvas, correspondingBox, valueCell.value);
+				var correspondingBox = textBoxes.find(function(box){
+
+						return box.xpos === box.width * valueCell.column && box.ypos === box.height * valueCell.row;
+
+				});
+				drawTextInBox(canvas, correspondingBox, valueCell.value);
 		});
 		["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight" ]
 
@@ -341,24 +374,24 @@ function drawSquare(canvas, box, lineWidth){
 }
 
 function updateSudoku(canvas, preNumbers, marker){
-	var ctx = canvas.getContext("2d");
-	ctx.clearRect(0,0,canvas.width ,canvas.height);
+		var ctx = canvas.getContext("2d");
+		ctx.clearRect(0,0,canvas.width ,canvas.height);
 
-	drawSudoku(canvas, preNumbers, marker);
+		drawSudoku(canvas, preNumbers, marker);
 
 
 		var lineWidth = 5;	
 		drawSquare(canvas, globalMarkerBox, lineWidth);
-	
+
 }
-	
-	updateSudoku(canvas, globalPreNumbers, globalMarkerBox);
-	function showAnswer(){
-	
-				
-			getAnswer(globalPreNumbers.filter(function(cell){
-					return cell.value !== 0;}));
-	}
+
+updateSudoku(canvas, globalPreNumbers, globalMarkerBox);
+function showAnswer(){
+
+
+		getAnswer(globalPreNumbers.filter(function(cell){
+				return cell.value !== 0;}));
+}
 
 
 		</script>
