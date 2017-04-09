@@ -102,6 +102,8 @@ function generatePositionBox(box, directionVector){
 }
 
 
+
+
 //numbersToAdd: {row, column, value}
 function generateNumberArray(numbersToAdd){	
 		numbersToAdd = numbersToAdd || [];
