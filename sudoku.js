@@ -85,22 +85,6 @@ function solveStep(cellList){
     solveCell(cell, cellList);
   });
 
-  //we can also use the fact that given that we have to put in a number, where in the row can that number be. 			
-
-  //this is the first cell in every box
-  //fix: it looks like getSquare depends on this. put into getSquare?
-  var firstCellList = cellList.filter(function(cell){
-    return ( cell.x === 1 && cell.y === 1 ) ||
-      (cell.x === 4 && cell.y ===1 ) ||
-      (cell.x === 7 && cell.y ===1 ) ||
-      (cell.x === 1 && cell.y ===4 ) ||
-      (cell.x === 4 && cell.y ===4 ) ||
-      (cell.x === 7 && cell.y ===4 ) ||
-      (cell.x === 1 && cell.y ===7 ) ||
-      (cell.x === 4 && cell.y ===7 ) ||
-      (cell.x === 7 && cell.y ===7 );
-
-  })
   
   var boxList = cellList.map(function(cell){
 
