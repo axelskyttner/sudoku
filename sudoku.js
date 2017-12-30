@@ -43,27 +43,26 @@ function solveBox(boxList, cellList){
   //for every number we check if we can find how many cells there exist for that value
   var numbers = [1,2,3,4,5,6,7,8,9];	
 
-  var matchingNumbers = numbers.map(function(number){
+  var matchingNumbers = numbers.reduce(function(matchingNumbers, number){
 
     //get all the cells that the number can be in
     var matchingArrays = boxList.filter(function(cell){
       //first it has to be unassigned value and the 
-      return	cell.value === undefined && cell.potential.some(function(potentialValue){
+      return cell.value === undefined && cell.potential.some(function(potentialValue){
 
         return potentialValue === number;
       });
-
-
     });
+
     //if there is only one place the number can fit it's a match
     if(matchingArrays.length === 1){
       var cell = matchingArrays[0];
-      return {cell:cell, value:number}; 
+      matchingNumbers.push({cell:cell, value:number});
     }
-    else {
-      return false;
-    }
-  }).filter(function(maybeCell){return maybeCell !== false});
+
+    return matchingNumbers;
+
+  },[]);
 
   //matchingNumbers look like following {cell: cell, value:number}. It will only be one value and that's the only value the cell can take
   matchingNumbers.forEach(function(cellObject){
@@ -170,9 +169,10 @@ function solveGame(cellList){
   }
   else if(unsolvedFlag ){
 
-    return  solveGame(cellList);
+    return solveGame(cellList);
   }
 
+  //fix: what is this case?
   else{
     return cellList;
   }
