@@ -371,7 +371,7 @@ function getBusyNumbers(listOfBoxColumnRowValues){
     });
 
     remainingArray.push(mergedArray);
-    return [mergedArray2];
+    return mergedArray2;
 
   }
 
