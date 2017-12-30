@@ -7,6 +7,7 @@
 }
 
 
+
 function drawSquare(canvas, box, lineWidth){
 		var ctx = canvas.getContext("2d");
 		ctx.beginPath();
@@ -156,6 +157,25 @@ function getAnswer(sudokuArr){
 
 }
 
+function drawHelpBox(canvas){
+	
+		
+		var	border = {width:500/3, height:500/3, xpos: 0, ypos:0};
+		var lineWidth = 5;
+
+		drawSquare(canvas, border, lineWidth);
+
+		//big boxes
+		var bigBoxes = generateInnerSquares(border);
+
+		console.log("bigboxes", bigBoxes);
+
+		bigBoxes.forEach(function(box,index){
+				drawSquare(canvas,box, lineWidth);
+				drawTextInBox(canvas, box, index + 1);
+		});
+}
+
 function drawSudoku(canvas, preNumbers){
 
 		var lineWidthBorder = 10;
@@ -163,6 +183,7 @@ function drawSudoku(canvas, preNumbers){
 		var lineWidthSmallBox =2 ;
 
 		//using an object as repr of box border = {width, height, xpos,yos}
+		//fix: change to canvas properties
 		var	border = {width:500, height:500, xpos: 0, ypos:0};
 
 
@@ -175,6 +196,7 @@ function drawSudoku(canvas, preNumbers){
 		bigBoxes.forEach(function(box){
 				drawSquare(canvas,box, lineWidthBigBox);
 		});
+
 
 
 		//text boxes

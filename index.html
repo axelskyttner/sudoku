@@ -16,9 +16,13 @@
 					Move the cursor with arrows, set text with numberkey and clear with 0.
 
 				</h2>
-				<canvas id="mycanvas" width="500px" height="500px">
+				<canvas id="sudokuCanvas" width="500px" height="500px">
+				</canvas>
 
-				</canvas>	
+				<!-- 167 about= 500/3  -->
+				<canvas id="numberCanvas" width="167px" height="167px">
+				</canvas>
+
 
 				<button onclick="showAnswer()">Show more numbers</button>
 				<button onclick="emptyGame()">Clear sudoku</button>
@@ -27,7 +31,8 @@
 		</body>
 		<script>
 
-		var canvas = document.getElementById("mycanvas");
+		var canvas = document.getElementById("sudokuCanvas");
+		var helpCanvas = document.getElementById("numberCanvas");
 
 		var globalMarkerBox = {width:500/9, height:500/9, xpos:0, ypos:0};
 		var globalPreNumbers = [];
@@ -86,7 +91,7 @@ var allKeys = Rx.Observable.fromEvent(document, "keyup");
 var ykeyUps = Rx.Observable.fromEvent(document,"keyup").map(function(keyObject){return keyObject.key}).filter(checkYDir);
 var xkeyUps = Rx.Observable.fromEvent(document,"keyup").map(function(keyObject){return keyObject.key}).filter(checkXDir);
 var numberKeys = Rx.Observable.fromEvent(document,"keyup").map(function(keyObject){return keyObject.key}).filter(checkNumberKey);
-var touchKeys = Rx.Observable.fromEvent(document,"click").map(function(touchEvent){
+var canvasKeys = Rx.Observable.fromEvent(document,"click").map(function(touchEvent){
 	return getCursorPosition(canvas, touchEvent);		
 		
 		
@@ -104,7 +109,24 @@ var touchKeys = Rx.Observable.fromEvent(document,"click").map(function(touchEven
 
 });
 
+var helpCanvasKeys = Rx.Observable.fromEvent(document,"click").map(function(touchEvent){
+	return getCursorPosition(helpCanvas, touchEvent);		
+		
+		
+}).filter(function( cursorPosition ) {
+	var canvas = helpCanvas;
+	if(cursorPosition.x < 0 || cursorPosition.y < 0 || cursorPosition.x > canvas.width || cursorPosition.y > canvas.height){
 
+		return false;
+
+	}
+	else {
+
+		return true;
+	}
+
+});
+drawHelpBox(helpCanvas);
 function getCursorPosition(canvas, event) {
     var rect = canvas.getBoundingClientRect();
     var x = event.clientX - rect.left;
@@ -115,24 +137,45 @@ function getCursorPosition(canvas, event) {
 
 ykeyUps.subscribe(updateGlobalBox);
 xkeyUps.subscribe(updateGlobalBox);
-touchKeys.subscribe(function( cursorPosition ){
+canvasKeys.subscribe(function( cursorPosition ){
 	var x = cursorPosition.x;	
 	var y = cursorPosition.y;	
 
 		//using formula 500*i/9 about= x
 	//so i about= x/500*9 and then set x = 500*i/9
-	var ix = Math.round(x/500*9);
+	var ix = Math.floor(x/500*9);
 	var x = 500*ix /9;
 	
-	var iy = Math.round(y/500*9);
+	var iy = Math.floor(y/500*9);
 	var y = 500*iy/9;
 
 	globalMarkerBox.xpos = x;
 	globalMarkerBox.ypos = y;
 
-	console.log("updating globalMarker>Box!");
-	console.log("x", x);
 		updateSudoku(canvas, globalPreNumbers, globalMarkerBox);		
+});
+helpCanvasKeys.subscribe(function( cursorPosition ){
+	var x = cursorPosition.x;	
+	var y = cursorPosition.y;	
+
+		//using formula 500*i/9 about= x
+	//so i about= x/500*9 and then set x = 500*i/9
+	var ix = Math.floor(x/500*9);
+	
+	var iy = Math.floor(y/500*9);
+
+	var numberArray = [[1,2,3], [4,5,6], [7,8,9]];
+	
+	console.log("x", ix);
+	console.log("y", iy);
+	
+
+	var number = numberArray[ix][iy];
+
+	console.log("number", number);
+
+	addNumberToPreNumber(number);
+	updateSudoku(canvas, globalPreNumbers, globalMarkerBox);		
 });
 
 numberKeys.subscribe(addNumberToPreNumber);
