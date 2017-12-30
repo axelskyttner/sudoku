@@ -295,48 +295,6 @@ function getSquare(cell, cellList){
   return squareArray;
 }
 
-function sortArray(array){
-  //var sortedArray = [];
-  var sortedArray2 = array.slice();
-
-  var sortedArray3 = array.map(function(cell, index ){
-    var valueToBeInsertedIndex = sortedArray2.findIndex(function(cell){
-      return cell.value -1  === index;
-    });
-
-    if(valueToBeInsertedIndex > -1){
-
-      var returnValue = sortedArray2.splice(valueToBeInsertedIndex,1);
-      return returnValue[0];
-    }
-    else {
-      var undefinedValueIndex = sortedArray2.findIndex(function(cell){
-        return cell.value === undefined;
-      });
-      var returnValue = sortedArray2.splice(undefinedValueIndex,1);
-      return returnValue[0];
-    }
-
-
-  });
-
-  sortedArray2.sort(function(cell1, cell2){
-    if(cell1.value === undefined){
-      return true;
-    }
-    else if(cell2.value === undefined){
-      return false;
-    }
-    else {
-
-      return cell1.value > cell2.value;
-    }
-  });
-
-
-  return sortedArray3;
-
-}
 
 
 //fix: rename
