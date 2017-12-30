@@ -8,8 +8,6 @@ Cell = function(x,y){
 
 }
 
-//numberlist to use for dev
-var numberList = [1,2,3,4,5,6,7,8,9];
 
 //solve one cell
 function solveCell(cell, cellList){
@@ -90,7 +88,8 @@ function solveStep(cellList){
   //we can also use the fact that given that we have to put in a number, where in the row can that number be. 			
 
   //this is the first cell in every box
-  var boxList = cellList.filter(function(cell){
+  //fix: it looks like getSquare depends on this. put into getSquare?
+  var firstCellList = cellList.filter(function(cell){
     return ( cell.x === 1 && cell.y === 1 ) ||
       (cell.x === 4 && cell.y ===1 ) ||
       (cell.x === 7 && cell.y ===1 ) ||
@@ -101,7 +100,9 @@ function solveStep(cellList){
       (cell.x === 4 && cell.y ===7 ) ||
       (cell.x === 7 && cell.y ===7 );
 
-  }).map(function(cell){
+  })
+  
+  var boxList = cellList.map(function(cell){
 
     return getSquare(cell, cellList);
 
@@ -185,7 +186,7 @@ function solveGame(cellList){
   }
   else if(unsolvedFlag ){
 
-    return 	solveGame(cellList);
+    return  solveGame(cellList);
   }
 
   else{
@@ -261,11 +262,13 @@ function getColumn(cell, cellList){
 //returns array with the column
 function getSquare(cell, cellList){
 
-  var columnArray = cellList.filter(function(cellInCellList){
+  var squareArray = cellList.filter(function(cellInCellList){
+
+    //fix: why /3?
     return Math.ceil(cellInCellList.x/3) === Math.ceil(cell.x/3) && Math.ceil(cellInCellList.y/3) === Math.ceil(cell.y/3);
   });	
 
-  return columnArray;
+  return squareArray;
 }
 
 function sortArray(array){
@@ -311,13 +314,15 @@ function sortArray(array){
 
 }
 
-
+//fix: change name of arrayWithArrays
+//what does this function do, do not understand
 function getBusyNumbers(arrayWithArrays){
   if(arrayWithArrays.length > 1){
     var array1 = arrayWithArrays[0];
     var array2 = arrayWithArrays[1];
     var remainingArray = arrayWithArrays.slice(2);
 
+    //fix: change to reduce?
     var mergedArray = array1.map(function(value, index){
       var value2 = array2[index];
       if(value !== undefined ){

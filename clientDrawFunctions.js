@@ -140,7 +140,6 @@ function getAnswer(sudokuArr){
           var text = xhr.response;
           globalPreNumbers = JSON.parse(text);
 
-
           //removes all the undefined values
           globalPreNumbers = globalPreNumbers.filter(function(cell){
             return cell.value !== undefined;
