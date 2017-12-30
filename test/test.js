@@ -22,6 +22,8 @@ describe("test of existing functionality",()=>{
 
     var newCellList = sudoku.solveGame(globalPreNumbers);
     newCellList = sudoku.solveGame(newCellList);
+    newCellList = sudoku.solveGame(newCellList);
+    newCellList = sudoku.solveGame(newCellList);
     var unsolvedCells = newCellList.filter(cell=>cell.value === undefined);
     assert.equal(unsolvedCells.length, 0)
 
@@ -44,7 +46,9 @@ describe("test of solveBox", ()=>{
   it("should solve if only one left", function(){
     var boxList = [
     {
-      potential: [2]
+      potential: [2],
+      isSolved: ()=>true
+
     }
     ];
     var cellList = sudoku.__test__.findBoxSolution(boxList);
@@ -59,7 +63,9 @@ describe("test of solveBox", ()=>{
 describe("test of solveCell", ()=> {
   //fix: change name
   it("test of calling function", ()=>{
-      var busyNumbers = sudoku.__test__.getBusyNumbers([],[],[]);
+      var potentialValues = sudoku.__test__.getPotentialValues({
+        potential: []
+      },[]);
 
       assert.equal(0,0);
 

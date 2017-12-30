@@ -4,14 +4,19 @@ Cell = function(x,y){
   this.x = x;
   this.y = y;
   this.value = undefined;
-  this.potential= [];
+  this.potential= [1,2,3,4,5,6,7,8,9];
 
 }
 
+Cell.prototype.isSolved = ()=> {
+  
+  return this.value !== undefined;
+};
+
 
 //solve one cell
-function solveCell(cell, cellList){
-  cell.potential = [];
+function getPotentialValues(cell, cellList){
+  var potentialList = cell.potential;
 
   var sortedArrayRow = sortArray(getRow(cell, cellList));
 
@@ -19,23 +24,26 @@ function solveCell(cell, cellList){
 
   var sortedArrayBox = sortArray(getSquare(cell, cellList));
 
-  var rowColumnBoxList = [sortedArrayRow, sortedArrayColumn, sortedArrayBox]
 
   var rowValues = sortedArrayRow.map(cell=>cell.value);
   var colValues = sortedArrayColumn.map(cell=>cell.value);
   var boxValues = sortedArrayBox.map(cell=>cell.value);
 
-
-  //busyArray is an array from 1 to 9 with either a value or undefined
-  var busyArray = getBusyNumbers(rowValues, colValues, boxValues);
-
-  busyArray.forEach(function(valueInBusyList, index){
-
-    if(valueInBusyList === undefined){
-      cell.potential.push(index +1);
-    };
-
+  var newPotential = potentialList.filter(function(number){
+    if(
+        numberExistsInArray(rowValues, number) || 
+        numberExistsInArray(colValues, number) || 
+        numberExistsInArray(boxValues, number))
+    {
+      return false;
+    }
+    else {
+      return true;
+    }
   });
+
+
+  return newPotential;
 
 };
 
@@ -110,7 +118,8 @@ function solveStep(cellList){
 
   //this command will find every value that has to be because no other values fit	
   cellList.forEach(function(cell){
-    solveCell(cell, cellList);
+    var potentialList = getPotentialValues(cell, cellList);
+    cell.potential = potentialList;
   });
 
   
@@ -239,10 +248,11 @@ function solveGameFromClient(sudokuFromClient){
   return correctedGame;
 }
 
-//set cell to the value
+//set cell to the value and make the potentials only the current value
 function setCell(x,y, value, cellList){
   var cell = getCell(x,y, cellList);
   cell.value = value;
+  cell.potential = [value];
 
 
 }
@@ -327,39 +337,6 @@ function sortArray(array){
 
 }
 
-//fix: change name of arrayWithArrays
-//what does this function do, do not understand
-function getBusyNumbers(array1, array2, array3){
-
-    //check if we have a value or undefined in every position in array 1,2,3
-    var mergedArray = array1.map(function(value, index){
-      var value2 = array2[index];
-      var value3 = array3[index];
-      if(value !== undefined ){
-
-        return value;
-      }
-
-      else if(value2 !== undefined){
-        return value2;
-      }
-
-      else if(value3 !== undefined){
-        return value3;
-      }
-
-      else {
-        return undefined;
-      }
-
-    });
-
-
-    return mergedArray;
-
-
-
-}
 
 //fix: rename
 module.exports = {
@@ -367,7 +344,8 @@ module.exports = {
   solveGame: solveGameFromClient,
   __test__: {
     solveBox: solveBox,
-    getBusyNumbers: getBusyNumbers,
+    Cell: Cell,
+    getPotentialValues: getPotentialValues,
     findBoxSolution: findBoxSolution  
   },
   solveGame2: solveGame
