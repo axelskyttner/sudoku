@@ -351,6 +351,7 @@ function getBusyNumbers(listOfBoxColumnRowValues){
       }
 
     });
+
     var mergedArray2 = mergedArray.map(function(value,index){
 
       var value2 = array3[index];

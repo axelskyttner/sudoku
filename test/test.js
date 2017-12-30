@@ -53,8 +53,10 @@ describe("test of solveBox", ()=>{
 
 describe("test of solveCell", ()=> {
   //fix: change name
-  it("asd", ()=>{
-      var busyNumbers = sudoku.__test__.getBusyNumbers([]);
+  it("test of calling function", ()=>{
+      var busyNumbers = sudoku.__test__.getBusyNumbers([],[],[]);
+
+      assert.equal(0,0);
 
   });
 
