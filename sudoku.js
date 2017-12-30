@@ -15,21 +15,22 @@ Cell.prototype.isSolved = ()=> {
 
 
 //solve one cell
+//check which of the values from one to nine that is not existing in any other list
 function getPotentialValues(cell, cellList){
-  var potentialList = cell.potential;
 
-  var sortedArrayRow = sortArray(getRow(cell, cellList));
+  var row = getRow(cell, cellList);
 
-  var sortedArrayColumn = sortArray(getColumn(cell, cellList));
+  var col = getColumn(cell, cellList);
 
-  var sortedArrayBox = sortArray(getSquare(cell, cellList));
+  var box = getSquare(cell, cellList);
 
+  var oneToNine = [1,2,3,4,5,6,7,8,9];
 
-  var rowValues = sortedArrayRow.map(cell=>cell.value);
-  var colValues = sortedArrayColumn.map(cell=>cell.value);
-  var boxValues = sortedArrayBox.map(cell=>cell.value);
+  var rowValues = row.map(cell=>cell.value);
+  var colValues = col.map(cell=>cell.value);
+  var boxValues = box.map(cell=>cell.value);
 
-  var newPotential = potentialList.filter(function(number){
+  var newPotential = oneToNine.filter(function(number){
     if(
         numberExistsInArray(rowValues, number) || 
         numberExistsInArray(colValues, number) || 

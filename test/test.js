@@ -10,6 +10,9 @@ describe("test of existing functionality",()=>{
     var newCellList = sudoku.solveGame(globalPreNumbers);
      newCellList = sudoku.solveGame(newCellList);
      newCellList = sudoku.solveGame(newCellList);
+     newCellList = sudoku.solveGame(newCellList);
+     newCellList = sudoku.solveGame(newCellList);
+     newCellList = sudoku.solveGame(newCellList);
     var unsolvedCells = newCellList.filter(cell=>cell.value === undefined);
     assert.equal(unsolvedCells.length, 0)
 
