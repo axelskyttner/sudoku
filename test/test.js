@@ -22,3 +22,40 @@ describe("test of existing functionality",()=>{
 
   });
 });;
+
+
+
+describe("test of solveBox", ()=>{
+  it("should solve if only one left", function(){
+    var cellList = []; 
+    var boxList = [];
+    sudoku.__test__.solveBox(boxList, cellList);
+
+    assert.equal(true,true);
+
+
+  });
+  
+  it("should solve if only one left", function(){
+    var boxList = [
+    {
+      potential: [2]
+    }
+    ];
+    var cellList = sudoku.__test__.findBoxSolution(boxList);
+
+    assert.equal(cellList.length,1);
+
+
+  });
+
+})
+
+describe("test of solveCell", ()=> {
+  //fix: change name
+  it("asd", ()=>{
+      var busyNumbers = sudoku.__test__.getBusyNumbers([]);
+
+  });
+
+})

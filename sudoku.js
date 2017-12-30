@@ -37,39 +37,66 @@ function solveCell(cell, cellList){
 
 };
 
-//find solution for sudokubox
-function solveBox(boxList, cellList){
+function numberExistsInArray(numberList, number){
+
+      //if the number we're checking exist in cell's potential we say true
+      var numberInCellPotential = numberList.some(function(potentialValue){
+
+        return potentialValue === number;
+      });
+
+
+      return numberInCellPotential;
+
+}
+
+
+//check every number from 1 to 9 and check if there is any number s.t. it can only be at one place in box
+function findBoxSolution(cellsInBox){
 
   //for every number we check if we can find how many cells there exist for that value
   var numbers = [1,2,3,4,5,6,7,8,9];	
 
-  var matchingNumbers = numbers.reduce(function(matchingNumbers, number){
+  var cellsWithSolution = numbers.reduce(function(cellList, number){
 
-    //get all the cells that the number can be in
-    var matchingArrays = boxList.filter(function(cell){
-      //first it has to be unassigned value and the 
-      return cell.value === undefined && cell.potential.some(function(potentialValue){
+    //only interested in cells that do not have a solution
+    var emptyCells = cellsInBox.filter(cell=> cell.value === undefined);
 
-        return potentialValue === number;
-      });
+    
+    var cellsThatCanContainNumber = emptyCells.filter(function(cell){
+
+      return numberExistsInArray(cell.potential, number);
+
     });
 
     //if there is only one place the number can fit it's a match
-    if(matchingArrays.length === 1){
-      var cell = matchingArrays[0];
-      matchingNumbers.push({cell:cell, value:number});
-    }
+    if(cellsThatCanContainNumber.length === 1){
+      var cell = cellsThatCanContainNumber[0];
 
-    return matchingNumbers;
+      return cellList.concat({cell:cell, value:number});
+    }
+    else {
+      return cellList;
+    }
 
   },[]);
 
+  return cellsWithSolution;
+
+}
+
+//find solution for sudokubox
+//fix: remove this function and move logic to calling function
+function solveBox(cellsInBox, cellList){
+
+  //for every number we check if we can find how many cells there exist for that value
+  var cellsWithSolution = findBoxSolution(cellsInBox);
   //matchingNumbers look like following {cell: cell, value:number}. It will only be one value and that's the only value the cell can take
-  matchingNumbers.forEach(function(cellObject){
+  cellsWithSolution.forEach(function(cellObject){
     var cell =	cellObject.cell;
     var value = cellObject.value;
 
-    //global cell
+    //find the cell in cewllList and change the potential 
     var globalCell = getCell(cell.x, cell.y, cellList);
     globalCell.potential = [value];
   });
@@ -300,11 +327,12 @@ function sortArray(array){
 
 //fix: change name of arrayWithArrays
 //what does this function do, do not understand
-function getBusyNumbers(arrayWithArrays){
-  if(arrayWithArrays.length > 1){
-    var array1 = arrayWithArrays[0];
-    var array2 = arrayWithArrays[1];
-    var remainingArray = arrayWithArrays.slice(2);
+function getBusyNumbers(listOfBoxColumnRowValues){
+  if(listOfBoxColumnRowValues.length > 2){
+    var array1 = listOfBoxColumnRowValues[0];
+    var array2 = listOfBoxColumnRowValues[1];
+    var array3 = listOfBoxColumnRowValues[2];
+    var remainingArray = listOfBoxColumnRowValues.slice(2);
 
     //fix: change to reduce?
     var mergedArray = array1.map(function(value, index){
@@ -323,14 +351,33 @@ function getBusyNumbers(arrayWithArrays){
       }
 
     });
+    var mergedArray2 = mergedArray.map(function(value,index){
+
+      var value2 = array3[index];
+      if(value !== undefined ){
+
+        return value;
+      }
+
+      else if(value2 !== undefined){
+        return value2;
+      }
+
+      else {
+        return undefined;
+      }
+
+    });
 
     remainingArray.push(mergedArray);
-    return getBusyNumbers(remainingArray);
+    return [mergedArray2];
 
   }
 
+
+
   else {
-    return arrayWithArrays[0];
+    return listOfBoxColumnRowValues[0];
   }
 }
 
@@ -338,6 +385,11 @@ function getBusyNumbers(arrayWithArrays){
 module.exports = {
 
   solveGame: solveGameFromClient,
+  __test__: {
+    solveBox: solveBox,
+    getBusyNumbers: getBusyNumbers,
+    findBoxSolution: findBoxSolution  
+  },
   solveGame2: solveGame
 }
 
