@@ -152,18 +152,19 @@ canvasKeys.subscribe(function( cursorPosition ){
 	globalMarkerBox.xpos = x;
 	globalMarkerBox.ypos = y;
 
-		updateSudoku(canvas, globalPreNumbers, globalMarkerBox);		
+	updateSudoku(canvas, globalPreNumbers, globalMarkerBox);		
 });
 helpCanvasKeys.subscribe(function( cursorPosition ){
 	var x = cursorPosition.x;	
 	var y = cursorPosition.y;	
 
-		//using formula 500*i/9 about= x
+	//using formula 500*i/9 about= x
 	//so i about= x/500*9 and then set x = 500*i/9
 	var ix = Math.floor(x/500*9);
 	
 	var iy = Math.floor(y/500*9);
 
+        //fix what is this?
 	var numberArray = [[1,2,3], [4,5,6], [7,8,9]];
 	
 	console.log("x", ix);
