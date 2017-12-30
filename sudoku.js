@@ -20,12 +20,14 @@ function solveCell(cell, cellList){
   var sortedArrayBox = sortArray(getSquare(cell, cellList));
 
   var rowColumnBoxList = [sortedArrayRow, sortedArrayColumn, sortedArrayBox]
-    var valueList = rowColumnBoxList.map(function(cellArray){
 
-      return cellArray.map(function(cell){return cell.value});
-    });
+  var rowValues = sortedArrayRow.map(cell=>cell.value);
+  var colValues = sortedArrayColumn.map(cell=>cell.value);
+  var boxValues = sortedArrayBox.map(cell=>cell.value);
 
-  var busyArray = getBusyNumbers(valueList);
+
+  //busyArray is an array from 1 to 9 with either a value or undefined
+  var busyArray = getBusyNumbers(rowValues, colValues, boxValues);
 
   busyArray.forEach(function(valueInBusyList, index){
 
@@ -327,16 +329,12 @@ function sortArray(array){
 
 //fix: change name of arrayWithArrays
 //what does this function do, do not understand
-function getBusyNumbers(listOfBoxColumnRowValues){
-  if(listOfBoxColumnRowValues.length > 2){
-    var array1 = listOfBoxColumnRowValues[0];
-    var array2 = listOfBoxColumnRowValues[1];
-    var array3 = listOfBoxColumnRowValues[2];
-    var remainingArray = listOfBoxColumnRowValues.slice(2);
+function getBusyNumbers(array1, array2, array3){
 
-    //fix: change to reduce?
+    //check if we have a value or undefined in every position in array 1,2,3
     var mergedArray = array1.map(function(value, index){
       var value2 = array2[index];
+      var value3 = array3[index];
       if(value !== undefined ){
 
         return value;
@@ -346,22 +344,8 @@ function getBusyNumbers(listOfBoxColumnRowValues){
         return value2;
       }
 
-      else {
-        return undefined;
-      }
-
-    });
-
-    var mergedArray2 = mergedArray.map(function(value,index){
-
-      var value2 = array3[index];
-      if(value !== undefined ){
-
-        return value;
-      }
-
-      else if(value2 !== undefined){
-        return value2;
+      else if(value3 !== undefined){
+        return value3;
       }
 
       else {
@@ -370,16 +354,11 @@ function getBusyNumbers(listOfBoxColumnRowValues){
 
     });
 
-    remainingArray.push(mergedArray);
-    return mergedArray2;
 
-  }
+    return mergedArray;
 
 
 
-  else {
-    return listOfBoxColumnRowValues[0];
-  }
 }
 
 //fix: rename
