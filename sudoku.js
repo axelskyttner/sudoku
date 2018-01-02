@@ -8,6 +8,15 @@ Cell = function(x,y){
 
 }
 
+Cell.prototype.clone = ()=>{
+
+  var newCell = new Cell(this.x, this.y);
+  newCell.value =  this.value;
+
+  return newCell;
+
+}
+
 Cell.prototype.isSolved = ()=> {
   
   return this.value !== undefined;
@@ -24,13 +33,13 @@ function getPotentialValues(cell, cellList){
 
   var box = getSquare(cell, cellList);
 
-  var oneToNine = [1,2,3,4,5,6,7,8,9];
+  var potential = cell.potential;
 
   var rowValues = row.map(cell=>cell.value);
   var colValues = col.map(cell=>cell.value);
   var boxValues = box.map(cell=>cell.value);
 
-  var newPotential = oneToNine.filter(function(number){
+  var newPotential = potential.filter(function(number){
     if(
         numberExistsInArray(rowValues, number) || 
         numberExistsInArray(colValues, number) || 
@@ -42,7 +51,6 @@ function getPotentialValues(cell, cellList){
       return true;
     }
   });
-
 
   return newPotential;
 
@@ -109,6 +117,10 @@ function solveBox(cellsInBox, cellList){
 
     //find the cell in cewllList and change the potential 
     var globalCell = getCell(cell.x, cell.y, cellList);
+    if(value === undefined){
+
+    console.log("value", value);
+    }
     globalCell.potential = [value];
   });
 
@@ -163,10 +175,11 @@ function solveStep(cellList){
 function solveGame(cellList){
 
   //solve one more time
+  var copiedCellList = cellList.map(cell=>cell.clone());
   cellList = solveStep(cellList);
 
   //check if it's solvable by solving one more time and check if it's less undefined values
-  var nextCellList = solveStep(solveStep(cellList));
+  var nextCellList = solveStep(solveStep(copiedCellList));
 
   //counting the number of empty cells
   var numberOfEmptyCells = cellList.reduce(function(acc,cell){
@@ -237,7 +250,6 @@ function solveGameFromClient(sudokuFromClient){
 
   //a cell looks like following {row, column, value}
   sudokuFromClient.forEach(function(cell){
-
     setCell(cell.row + 1, cell.column +1, cell.value, cellList);
 
   });
@@ -253,7 +265,14 @@ function solveGameFromClient(sudokuFromClient){
 function setCell(x,y, value, cellList){
   var cell = getCell(x,y, cellList);
   cell.value = value;
-  cell.potential = [value];
+  if(value == undefined){
+
+    cell.potential = [1,2,3,4,5,6,7,8,9];
+  }
+  else {
+
+    cell.potential = [value];
+  }
 
 
 }
