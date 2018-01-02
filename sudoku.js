@@ -170,69 +170,6 @@ function solveStep(cellList){
 
 
 
-//this solves the game
-//returns a cellList
-function solveGame(cellList){
-
-  //solve one more time
-  var copiedCellList = cellList.map(cell=>cell.clone());
-  cellList = solveStep(cellList);
-
-  //check if it's solvable by solving one more time and check if it's less undefined values
-  var nextCellList = solveStep(solveStep(copiedCellList));
-
-  //counting the number of empty cells
-  var numberOfEmptyCells = cellList.reduce(function(acc,cell){
-    if(cell.value === undefined){
-
-      return acc + 1;
-    }
-
-    else{
-
-      return acc;
-    }
-  }, 0);
-
-
-  //counting the number of empty cells
-  var numberOfEmptyCellsNext = nextCellList.reduce(function(acc,cell){
-    if(cell.value === undefined){
-
-      return acc + 1;
-    }
-
-    else{
-
-      return acc;
-    }
-  }, 0);
-
-  //check if there is any cells left unsolved
-  var unsolvedFlag = numberOfEmptyCells > 0;
-
-  //check if it's solvable
-  var solvable = numberOfEmptyCellsNext < numberOfEmptyCells;
-
-  if( !solvable ) {
-
-    return cellList;
-
-  }
-  else if(unsolvedFlag ){
-
-    return solveGame(cellList);
-  }
-
-  //fix: what is this case?
-  else{
-    return cellList;
-  }
-
-
-};
-
-
 //this is the function that get's exported
 function solveGameFromClient(sudokuFromClient){
 
@@ -248,17 +185,20 @@ function solveGameFromClient(sudokuFromClient){
 
   }
 
-  //a cell looks like following {row, column, value}
+  //a cell looks like following {row, column, value, potential}
   sudokuFromClient.forEach(function(cell){
+
     setCell(cell.row + 1, cell.column +1, cell.value, cellList);
 
   });
 
 
-  var solvedGame = solveGame(cellList);
+  var solvedGame = solveStep(cellList);
 
   var correctedGame = solvedGame.map(function( cell ){return {row:cell.x - 1, column : cell.y - 1, value: cell.value}});
+
   return correctedGame;
+
 }
 
 //set cell to the value and make the potentials only the current value
@@ -325,8 +265,7 @@ module.exports = {
     Cell: Cell,
     getPotentialValues: getPotentialValues,
     findBoxSolution: findBoxSolution  
-  },
-  solveGame2: solveGame
+  }
 }
 
 
