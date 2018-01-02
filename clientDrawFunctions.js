@@ -159,10 +159,12 @@ function getAnswer(sudokuArr){
 function drawHelpBox(canvas){
 
 
-  var	border = {width:500/3, height:500/3, xpos: 0, ypos:0};
+  var	border = {width:500/3, height:500/4, xpos: 0, ypos:0 };
+  var	border0 = {width:500/3, height:500/8, xpos: 0, ypos:500/4 };
   var lineWidth = 5;
 
-  drawSquare(canvas, border, lineWidth);
+  //drawSquare(canvas, border, lineWidth);
+  drawSquare(canvas, border0, lineWidth);
 
   //big boxes
   var bigBoxes = generateInnerSquares(border);
@@ -173,6 +175,8 @@ function drawHelpBox(canvas){
     drawSquare(canvas,box, lineWidth);
     drawTextInBox(canvas, box, index + 1);
   });
+
+  drawTextInBox(canvas, border0, "Remove");
 }
 
 function drawSudoku(canvas, preNumbers){

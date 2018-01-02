@@ -28,6 +28,7 @@
 				<button onclick="emptyGame()">Clear sudoku</button>
 				<button onclick="createGame()">Sudoku game 1</button>
 				<button onclick="createGame3()">Sudoku game 2</button>
+				<button onclick="createGame4()">Sudoku game 4</button>
 		</body>
 		<script>
 
@@ -70,7 +71,12 @@ function emptyGame(){
 
 }
 
+function createGame4(){
+ emptyGame();
+ globalPreNumbers = JSON.parse("[{\"row\":0,\"column\":1,\"value\":8},{\"row\":0,\"column\":7,\"value\":5},{\"row\":1,\"column\":0,\"value\":4},{\"row\":1,\"column\":1,\"value\":5},{\"row\":1,\"column\":4,\"value\":3},{\"row\":1,\"column\":8,\"value\":1},{\"row\":2,\"column\":2,\"value\":1},{\"row\":2,\"column\":3,\"value\":5},{\"row\":2,\"column\":5,\"value\":8},{\"row\":2,\"column\":6,\"value\":4},{\"row\":3,\"column\":2,\"value\":4},{\"row\":3,\"column\":3,\"value\":1},{\"row\":3,\"column\":4,\"value\":9},{\"row\":3,\"column\":5,\"value\":3},{\"row\":3,\"column\":6,\"value\":6},{\"row\":3,\"column\":8,\"value\":5},{\"row\":4,\"column\":1,\"value\":6},{\"row\":4,\"column\":3,\"value\":8},{\"row\":4,\"column\":4,\"value\":5},{\"row\":4,\"column\":7,\"value\":1},{\"row\":5,\"column\":2,\"value\":5},{\"row\":5,\"column\":3,\"value\":6},{\"row\":5,\"column\":5,\"value\":2},{\"row\":5,\"column\":6,\"value\":9},{\"row\":6,\"column\":2,\"value\":2},{\"row\":6,\"column\":3,\"value\":4},{\"row\":6,\"column\":5,\"value\":9},{\"row\":6,\"column\":6,\"value\":5},{\"row\":7,\"column\":0,\"value\":5},{\"row\":7,\"column\":3,\"value\":3},{\"row\":7,\"column\":4,\"value\":8},{\"row\":7,\"column\":7,\"value\":4},{\"row\":7,\"column\":8,\"value\":7},{\"row\":8,\"column\":1,\"value\":4},{\"row\":8,\"column\":5,\"value\":5},{\"row\":8,\"column\":7,\"value\":3},{\"row\":8,\"column\":8,\"value\":9}]");
+    updateSudoku(canvas, globalPreNumbers, globalMarkerBox);
 
+}
 function createGame2(){
 
 		emptyGame();
@@ -158,14 +164,21 @@ helpCanvasKeys.subscribe(function( cursorPosition ){
 	var x = cursorPosition.x;	
 	var y = cursorPosition.y;	
 
-	//using formula 500*i/9 about= x
+        //fix: this is hard to follow replace numbers A
+        var canvasHeight = 500/3;
+        var nrOfColumns = 3;
+        var nrOfRows = 4;
+        var canvasWidth = 500/3;
+
+	//using formula 500/3*i/3 about= x
+        // or canvasHeight * i/nrOfRows = x <=> x = nrOfRows/canvasHeight
 	//so i about= x/500*9 and then set x = 500*i/9
-	var ix = Math.floor(x/500*9);
-	
-	var iy = Math.floor(y/500*9);
+	var ix = Math.floor(x/canvasHeight*nrOfColumns);
+
+	var iy = Math.floor(y/canvasHeight*nrOfRows);
 
         //fix what is this?
-	var numberArray = [[1,2,3], [4,5,6], [7,8,9]];
+	var numberArray = [[1,2,3,0], [4,5,6,0], [7,8,9,0]];
 	
 	console.log("x", ix);
 	console.log("y", iy);

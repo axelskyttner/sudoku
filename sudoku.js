@@ -22,34 +22,24 @@ Cell.prototype.isSolved = ()=> {
   return this.value !== undefined;
 };
 
-
 //solve one cell
 //check which of the values from one to nine that is not existing in any other list
 function getPotentialValues(cell, cellList){
 
-  var row = getRow(cell, cellList);
+  var rowValues = getRowValues(cell, cellList);
 
-  var col = getColumn(cell, cellList);
+  var colValues = getColumnValues(cell, cellList);
 
-  var box = getSquare(cell, cellList);
+  var boxValues = getSquareValues(cell, cellList);
 
   var potential = cell.potential;
 
-  var rowValues = row.map(cell=>cell.value);
-  var colValues = col.map(cell=>cell.value);
-  var boxValues = box.map(cell=>cell.value);
-
+  //remove element that are not potential values
   var newPotential = potential.filter(function(number){
-    if(
-        numberExistsInArray(rowValues, number) || 
+    var numberIsOccupied =  numberExistsInArray(rowValues, number) || 
         numberExistsInArray(colValues, number) || 
-        numberExistsInArray(boxValues, number))
-    {
-      return false;
-    }
-    else {
-      return true;
-    }
+        numberExistsInArray(boxValues, number)
+    return !numberIsOccupied;
   });
 
   return newPotential;
@@ -117,10 +107,6 @@ function solveBox(cellsInBox, cellList){
 
     //find the cell in cewllList and change the potential 
     var globalCell = getCell(cell.x, cell.y, cellList);
-    if(value === undefined){
-
-    console.log("value", value);
-    }
     globalCell.potential = [value];
   });
 
@@ -233,6 +219,12 @@ function getRow(cell, cellList){
   return rowArray;
 }
 
+function getRowValues(cell, cellList){
+  var rowArray = cellList.filter(function(cellInCellList){
+    return cell.x === cellInCellList.x;
+  });	
+  return rowArray.map(cell=>cell.value);
+}
 // returns array with column
 function getColumn(cell, cellList){
 
@@ -242,6 +234,25 @@ function getColumn(cell, cellList){
   return columnArray;
 }
 
+function getColumnValues(cell, cellList){
+
+  var columnArray = cellList.filter(function(cellInCellList){
+    return cell.y === cellInCellList.y;
+  });	
+  return columnArray.map(cell=>cell.value);
+}
+
+
+function getSquareValues(cell, cellList){
+
+  var squareArray = cellList.filter(function(cellInCellList){
+
+    //fix: why /3?
+    return Math.ceil(cellInCellList.x/3) === Math.ceil(cell.x/3) && Math.ceil(cellInCellList.y/3) === Math.ceil(cell.y/3);
+  });	
+
+  return squareArray.map(cell=>cell.value);
+}
 //returns array with the column
 function getSquare(cell, cellList){
 
@@ -253,8 +264,6 @@ function getSquare(cell, cellList){
 
   return squareArray;
 }
-
-
 
 //fix: rename
 module.exports = {
